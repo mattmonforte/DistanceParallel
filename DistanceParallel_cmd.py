@@ -1,6 +1,8 @@
 #DistanceParallelPlanesMultipleSelect
 #layers and objects get unlocked to allow selection
 #r0,64
+# Matt Monforte
+# ClickWhirDing.com
 #from Rhino import *
 #from Rhino.Geometry import *
 #import scriptcontext as sc
@@ -10,7 +12,6 @@ from scriptcontext import doc
 import scriptcontext
 import math
 
-
 # clean up how unlock sticky works
 # work on returns False, None, True
 # remember unlock settings
@@ -19,7 +20,14 @@ import math
 # Next make able to measure objects in blocks
 # if cant measure blocks error check when block selected
 # let user decide if can select locked objects
+# add select again by reseting
 # display command version for user somehow
+# add allow regular distance_cmd measurements
+# add allow selection of point and plane
+# add allow selection of point and line closest point
+# hightlight bad selection with red hightlght
+# add message out click to copy to clipboard
+# see if can improve hightlighting of block selections
 
 __commandname__ = "DistanceParallel"
 def RunCommand( is_interactive ):
@@ -36,7 +44,6 @@ def RunCommand( is_interactive ):
     objectsToRelock = []
     global plane
     plane = []
-
 
     if scriptcontext.sticky.has_key("distance_parallel_unlock"):
         unlockLayersDefault = scriptcontext.sticky["distance_parallel_unlock"]
@@ -89,25 +96,25 @@ def RunCommand( is_interactive ):
                 obj = objref.Object()
                 if not obj:
                     if myDebug :
-                        print("Object not selected")
+                        msgOut("Object not selected")
                     clean_up_fail()
                     return Rhino.Commands.Result.Failure
                 try:
                     surface = objref.Surface()
                 except:
-                    print("!Carefully select a surfaces when inside blocks. Surfaces within blocks are not always selectable. Polysurface can be selecte, Extrusion cannot. You may need to exlode block before selecting surface.")
-                    continue
+                    msgOut("Surfaces within blocks are not always selectable. Polysurfaces can be selected, Extrusion cannot. Explode block for more selectability.")
+                    # try to continue and reselect
                     clean_up_fail()
                     return Rhino.Commands.Result.Failure
                 if not surface:
                     if myDebug :
-                        print("None surface selected")
+                        msgOut("None surface selected")
                     clean_up_fail()
                     return Rhino.Commands.Result.Failure
                 # Unselect surface
                 test, getPlane = surface.TryGetPlane(ZERO_TOLERANCE)
                 if not test:
-                    print("One of the surfaces is not planar")
+                    msgOut("One of the selected surfaces is not planar")
                     # maybe continue or allow select of first surface again
                     clean_up_fail()
                     return Rhino.Commands.Result.Failure
@@ -117,8 +124,7 @@ def RunCommand( is_interactive ):
             # Are planes parallel
             # if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == True:
             if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == False:
-                print("Surfaces are not parallel to each other")
-                rs.MessageBox("Surfaces are not parallel to each other")
+                msgOut("Surfaces are not parallel to each other")
                 clean_up_fail()
                 return Rhino.Commands.Result.Failure
 
@@ -131,10 +137,16 @@ def RunCommand( is_interactive ):
             # decimalPlaces = doc.DistanceDisplayPrecision
             # textOut = "Parallel Distance = {:." + str(decimalPlaces) +"f} " + unitsName
             textOut = "Parallel Distance = {:.4f} " + unitsName
-            print(textOut.format(ParallelDistance))
+            msgOut(textOut.format(ParallelDistance))
+            # print(textOut.format(ParallelDistance))
 
         clean_up_success()
         return Rhino.Commands.Result.Success
+
+def msgOut(_msg):
+    print(_msg)
+    rs.MessageBox(_msg)
+    return
 
 def ArePlanesParallel(_plane1, _plane2, tol):
     cpvec = rs.VectorCrossProduct(_plane1.Normal, _plane2.Normal)
