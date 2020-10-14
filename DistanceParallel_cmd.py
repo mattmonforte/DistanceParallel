@@ -97,7 +97,7 @@ def RunCommand( is_interactive ):
                 obj = objref.Object()
                 if not obj:
                     if myDebug :
-                        msgOut("Object not selected.")
+                        msgOut("Object not selected")
                     clean_up_fail()
                     return rc.Commands.Result.Failure
                 try:
