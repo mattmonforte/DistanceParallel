@@ -1,16 +1,14 @@
 #DistanceParallelPlanesMultipleSelect
 #layers and objects get unlocked to allow selection
-#r0,64
+#r0,65
 # Matt Monforte
 # ClickWhirDing.com
-#from Rhino import *
-#from Rhino.Geometry import *
-#import scriptcontext as sc
-import Rhino
+
+import Rhino as rc
 import rhinoscriptsyntax as rs
 from scriptcontext import doc
-import scriptcontext
-import math
+import scriptcontext as sc
+# import math
 
 # clean up how unlock sticky works
 # work on returns False, None, True
@@ -26,13 +24,15 @@ import math
 # add allow selection of point and plane
 # add allow selection of point and line closest point
 # hightlight bad selection with red hightlght
-# add message out click to copy to clipboard
+# Done-add message out click to copy to clipboard
 # see if can improve hightlighting of block selections
 
 __commandname__ = "DistanceParallel"
 def RunCommand( is_interactive ):
+    # print "DistanceParallel r0,65"
+    # util.openUrl("https://github.com/mattmonforte")
 
-    DOC_TOLERANCE = rs.UnitAbsoluteTolerance()
+    # DOC_TOLERANCE = rs.UnitAbsoluteTolerance()
     ZERO_TOLERANCE = 1.0e-5
     myDebug = True
     unlockLayersDefault = False
@@ -45,10 +45,10 @@ def RunCommand( is_interactive ):
     global plane
     plane = []
 
-    if scriptcontext.sticky.has_key("distance_parallel_unlock"):
-        unlockLayersDefault = scriptcontext.sticky["distance_parallel_unlock"]
+    if sc.sticky.has_key("distance_parallel_unlock"):
+        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
 
-    s1 = Rhino.Input.Custom.GetObject()
+    s1 = rc.Input.Custom.GetObject()
     s1.SetCommandPrompt("Select Two Parallel Planar Surfaces")
     s1.AlreadySelectedObjectSelect = False
     s1.DeselectAllBeforePostSelect = False
@@ -60,11 +60,12 @@ def RunCommand( is_interactive ):
     # s1.EnableClearObjectsOnEntry(False)
 
     ## Filter object type
-    geometryType = Rhino.DocObjects.ObjectType.Surface
+    geometryType = rc.DocObjects.ObjectType.Surface
     s1.GeometryFilter = geometryType
 
-    unlockLayers = Rhino.Input.Custom.OptionToggle(unlockLayersDefault, "Off", "On")
+    unlockLayers = rc.Input.Custom.OptionToggle(unlockLayersDefault, "Off", "On")
     s1.AddOptionToggle("UnlockLayersAndObjects", unlockLayers)
+
     if unlockLayers.CurrentValue == 1:
         UnlockLayersUsed = True
         layersToRelock = unlock_layers()
@@ -72,22 +73,22 @@ def RunCommand( is_interactive ):
 
     while True:
     	getResult = s1.GetMultiple(1,2)
-    	if getResult == Rhino.Input.GetResult.Cancel:
+    	if getResult == rc.Input.GetResult.Cancel:
             clean_up_cancel()
-            return Rhino.Commands.Result.Cancel
-    	elif getResult == Rhino.Input.GetResult.Option:
+            return rc.Commands.Result.Cancel
+    	elif getResult == rc.Input.GetResult.Option:
             if unlockLayers.CurrentValue == 1:
                 UnlockLayersUsed = True
-                scriptcontext.sticky["distance_parallel_unlock"] = True
+                sc.sticky["distance_parallel_unlock"] = True
                 layersToRelock = unlock_layers()
                 objectsToRelock = unlock_objects()
             else:
-                scriptcontext.sticky["distance_parallel_unlock"] = False
+                sc.sticky["distance_parallel_unlock"] = False
                 lock_objects(objectsToRelock)
                 lock_layers(layersToRelock)
     	    # s1.EnablePreSelect(False, True)
             continue
-        elif getResult == Rhino.Input.GetResult.Object:
+        elif getResult == rc.Input.GetResult.Object:
             # ids = [s1.Object(i).ObjectId for i in range(s1.ObjectCount)]
             for i in range(2):
                 # get objects from selections
@@ -96,37 +97,37 @@ def RunCommand( is_interactive ):
                 obj = objref.Object()
                 if not obj:
                     if myDebug :
-                        msgOut("Object not selected")
+                        msgOut("Object not selected.")
                     clean_up_fail()
-                    return Rhino.Commands.Result.Failure
+                    return rc.Commands.Result.Failure
                 try:
                     surface = objref.Surface()
                 except:
                     msgOut("Surfaces within blocks are not always selectable. Polysurfaces can be selected, Extrusion cannot. Explode block for more selectability.")
                     # try to continue and reselect
                     clean_up_fail()
-                    return Rhino.Commands.Result.Failure
+                    return rc.Commands.Result.Failure
                 if not surface:
                     if myDebug :
-                        msgOut("None surface selected")
+                        msgOut("No surface selected.")
                     clean_up_fail()
-                    return Rhino.Commands.Result.Failure
+                    return rc.Commands.Result.Failure
                 # Unselect surface
                 test, getPlane = surface.TryGetPlane(ZERO_TOLERANCE)
                 if not test:
-                    msgOut("One of the selected surfaces is not planar")
+                    msgOut("One of the selected surfaces is not planar.")
                     # maybe continue or allow select of first surface again
                     clean_up_fail()
-                    return Rhino.Commands.Result.Failure
+                    return rc.Commands.Result.Failure
                 plane.append(getPlane)
                 # obj.Select(False)
 
             # Are planes parallel
             # if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == True:
             if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == False:
-                msgOut("Surfaces are not parallel to each other")
+                msgOut("Surfaces are not parallel to each other.")
                 clean_up_fail()
-                return Rhino.Commands.Result.Failure
+                return rc.Commands.Result.Failure
 
             # measure distance between planes
             # acually distance between plane[0] and point on plan[1]
@@ -136,12 +137,12 @@ def RunCommand( is_interactive ):
             ## fromating output decimal places not working
             # decimalPlaces = doc.DistanceDisplayPrecision
             # textOut = "Parallel Distance = {:." + str(decimalPlaces) +"f} " + unitsName
+            rs.ClipboardText(ParallelDistance)
             textOut = "Parallel Distance = {:.4f} " + unitsName
             msgOut(textOut.format(ParallelDistance))
-            # print(textOut.format(ParallelDistance))
 
         clean_up_success()
-        return Rhino.Commands.Result.Success
+        return rc.Commands.Result.Success
 
 def msgOut(_msg):
     print(_msg)
