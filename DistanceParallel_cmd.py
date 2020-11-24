@@ -1,6 +1,6 @@
 #DistanceParallelPlanesMultipleSelect
 #layers and objects get unlocked to allow selection
-#r0,65
+#r0,70
 # Matt Monforte
 # ClickWhirDing.com
 
@@ -8,6 +8,7 @@ import Rhino as rc
 import rhinoscriptsyntax as rs
 from scriptcontext import doc
 import scriptcontext as sc
+from DPutilities.UnLocker import UnLocker
 # import math
 
 # clean up how unlock sticky works
@@ -16,32 +17,26 @@ import scriptcontext as sc
 # maybe dont unlock hidden layers
 # tell user when block selected so command wont work
 # if cant measure blocks error check when block selected
-# let user decide if can select locked objects
 # add select again by reseting
 # display command version for user somehow
-# add allow regular distance_cmd measurements
-# add allow selection of point and plane
-# add allow select point and point
 # hightlight bad selection with red hightlght
 # Done-add message out click to copy to clipboard
 # see if can improve hightlighting of block selections
 # only try to relock layers/objcects if unlocked in the first place
 
+ul = UnLocker()
 __commandname__ = "DistanceParallel"
+# RunCommand is the called when the user enters the command name in Rhino.
+# The command name is defined by the filname minus "_cmd.py"
+
 def RunCommand( is_interactive ):
-    # print "DistanceParallel r0,65"
-    # util.openUrl("https://github.com/mattmonforte")
+
+    print __commandname__
 
     # DOC_TOLERANCE = rs.UnitAbsoluteTolerance()
     ZERO_TOLERANCE = 1.0e-5
     myDebug = True
     unlockLayersDefault = False
-    global isUnlocked
-    isUnlocked = False
-    global layersToRelock
-    layersToRelock = []
-    global objectsToRelock
-    objectsToRelock = []
     global plane
     plane = []
     selectedObjects = []
@@ -71,9 +66,7 @@ def RunCommand( is_interactive ):
     go.AddOptionToggle("UnlockLayersAndObjects", unlockLayers)
 
     if unlockLayers.CurrentValue == 1:
-        layersToRelock = unlock_layers()
-        objectsToRelock = unlock_objects()
-        isUnlocked = True
+        ul.unlockLayersAndObjects()
 
     while True:
         getResult = go.GetMultiple(selectedCounter+1,selectedCounter+1)
@@ -121,22 +114,17 @@ def RunCommand( is_interactive ):
                 return rc.Commands.Result.Failure
             plane.append(getPlane)
             if selectedCounter == 2:
-                clean_up_success()
                 break
             # loop until second surface selected or cancel
             continue
         # Locking and Unlocking Objects and Layers
         elif getResult == rc.Input.GetResult.Option:
             if unlockLayers.CurrentValue == 1:
-                isUnlocked = True
                 sc.sticky["distance_parallel_unlock"] = True
-                layersToRelock = unlock_layers()
-                objectsToRelock = unlock_objects()
+                ul.unlockLayersAndObjects()
             else:
-                isUnlocked = False
                 sc.sticky["distance_parallel_unlock"] = False
-                lock_objects(objectsToRelock)
-                lock_layers(layersToRelock)
+                ul.relockLayersAndObjects()
     	    # go.EnablePreSelect(False, True)
             continue
         elif getResult == Rhino.Input.GetResult.Nothing:
@@ -147,7 +135,7 @@ def RunCommand( is_interactive ):
 			# break
         # end While
 
-
+    clean_up_success()
     # Are planes parallel
     # if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == True:
     if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == False:
@@ -181,57 +169,24 @@ def ArePlanesParallel(_plane1, _plane2, tol):
     return False
 
 def clean_up_fail():
-    if isUnlocked:
-        lock_objects(objectsToRelock)
-        lock_layers(layersToRelock)
+    if ul.unlocked:
+        ul.relockLayersAndObjects()
     return
 
 def clean_up_success():
-    if isUnlocked:
-        lock_objects(objectsToRelock)
-        lock_layers(layersToRelock)
+    if ul.unlocked:
+        ul.relockLayersAndObjects()
     return
 
 def clean_up_cancel():
-    if isUnlocked:
-        lock_objects(objectsToRelock)
-        lock_layers(layersToRelock)
+    if ul.unlocked:
+        ul.relockLayersAndObjects()
     return
 
-def unlock_layers():
-    # Unlock any locked layers so objects on layers can be selected.
-    # Return list of layers unlocked with peristent locking setting of sub layers
-    # stored as list of (layerobject, GetPersistentLocking)
-    locked_layers = [layer for layer in doc.Layers if layer.IsLocked == True]
-    previously_locked = []
-    for layer in locked_layers:
-        previously_locked.append(tuple((layer, layer.GetPersistentLocking())))
-        layer.IsLocked = False
-    return previously_locked
+# print "DistanceParallel r0,70"
+# util.openUrl("https://github.com/mattmonforte")
 
-def lock_layers(_layers):
-    for layer in _layers:
-        layer_obj = layer[0]
-        layer_persistent_locking_bool = layer[1]
-        layer_obj.IsLocked = True
-        layer_obj.SetPersistentLocking(layer_persistent_locking_bool)
-    return
-
-def unlock_objects():
-    # maybe get by type (surface)
-    allIds = rs.LockedObjects()
-    lockedIds = []
-    for id in allIds:
-        if rs.IsObjectLocked(id):
-            if not rs.IsObjectHidden(id):
-                lockedIds.append(id)
-                rs.UnlockObject(id)
-    return lockedIds
-
-def lock_objects(_objects):
-    for obj_to_lock in _objects:
-        rs.LockObject(obj_to_lock)
-    return
-
+#This allows you to test the script from the editor, debug etc.
+#RunCommand(True)
 if( __name__ == "__main__" ):
     RunCommand(True)
