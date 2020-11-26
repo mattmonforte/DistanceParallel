@@ -1,5 +1,4 @@
-#DistanceParallelPlanesMultipleSelect
-#layers and objects get unlocked to allow selection
+#DistanceParallel
 #r0,70
 # Matt Monforte
 # ClickWhirDing.com
@@ -9,32 +8,16 @@ import rhinoscriptsyntax as rs
 from scriptcontext import doc
 import scriptcontext as sc
 from DPutilities.UnLocker import UnLocker
-# import math
-
-# clean up how unlock sticky works
-# work on returns False, None, True
-# Next make able to measure meshes
-# maybe dont unlock hidden layers
-# tell user when block selected so command wont work
-# if cant measure blocks error check when block selected
-# add select again by reseting
-# display command version for user somehow
-# hightlight bad selection with red hightlght
-# Done-add message out click to copy to clipboard
-# see if can improve hightlighting of block selections
-# only try to relock layers/objcects if unlocked in the first place
 
 ul = UnLocker()
 __commandname__ = "DistanceParallel"
-# RunCommand is the called when the user enters the command name in Rhino.
-# The command name is defined by the filname minus "_cmd.py"
 
 def RunCommand( is_interactive ):
 
     print __commandname__
 
-    # DOC_TOLERANCE = rs.UnitAbsoluteTolerance()
-    ZERO_TOLERANCE = 1.0e-5
+    # ZERO_TOLERANCE = 1.0e-5
+    ZERO_TOLERANCE = rs.UnitAbsoluteTolerance()
     myDebug = True
     unlockLayersDefault = False
     global plane
@@ -58,7 +41,7 @@ def RunCommand( is_interactive ):
     go.EnablePreSelect(False, True)
     # go.EnableClearObjectsOnEntry(False)
 
-    ## Filter object type
+    # Filter object type
     geometryType = rc.DocObjects.ObjectType.Surface
     go.GeometryFilter = geometryType
 
@@ -137,7 +120,6 @@ def RunCommand( is_interactive ):
 
     clean_up_success()
     # Are planes parallel
-    # if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == True:
     if ArePlanesParallel(plane[0], plane[1], ZERO_TOLERANCE) == False:
         msgOut("Surfaces are not parallel to each other.")
         clean_up_fail()
@@ -183,10 +165,5 @@ def clean_up_cancel():
         ul.relockLayersAndObjects()
     return
 
-# print "DistanceParallel r0,70"
-# util.openUrl("https://github.com/mattmonforte")
-
-#This allows you to test the script from the editor, debug etc.
-#RunCommand(True)
 if( __name__ == "__main__" ):
     RunCommand(True)

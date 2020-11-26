@@ -1,10 +1,10 @@
 #coding=utf-8
 '''
 Copyright
-create on 2019.08.25
-@author mahaidong
+create on 2020.11.23
+@author Matt Monforte
 
-Description: caad.xyz plugin for rhino
+Description: Distance Parallel plugin for rhino
 '''
 
 

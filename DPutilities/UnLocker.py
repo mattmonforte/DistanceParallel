@@ -1,3 +1,4 @@
+#UnLOcker
 # import Rhino
 import rhinoscriptsyntax as rs
 from scriptcontext import doc
@@ -7,7 +8,6 @@ class UnLocker:
     # Class Variables
     # The init method or constructor
     def __init__(self):
-        # print('**Create UnLocker**')
         # Instance Variables
         # if class unlocked the layers status is true
         self.unlocked = False
@@ -16,39 +16,29 @@ class UnLocker:
         self.prevLockedLayers = []
         self.prevLockedObjects = []
 
-	#Deleting (Calling destructor)
-	# def __del__(self):
-	# 	class_name = self.__class__.__name__
-	# 	if self.unlocked:
-	# 		print("clean up")
-	# 		self.relockLayersAndObjects()
-	# 	print(class_name, "destroyed")
-	# 	return
-
     def isUnLocked(self):
         if self.unlocked:
-            # print("status: True unlocked")
+            print("status: True unlocked")
         else:
-            # print("status: False locked")
+            print("status: False locked")
         return self.unlocked
 
     def areObjectsUnLocked(self):
         if self.objectUnLocked:
-            # print("status: True unlocked")
+            print("status: True unlocked")
         else:
-            # print("status: False locked")
+            print("status: False locked")
         return self.objectUnLocked
 
     def areLayersUnLocked(self):
         if self.layersUnLocked:
-            # print("status: True unlocked")
+            print("status: True unlocked")
         else:
-            # print("status: False locked")
+            print("status: False locked")
         return self.layersUnLocked
 
     def __unlockObjects(self):
         # print("Objects unlocked")
-        # maybe get by type (surface)
         self.prevLockedObjects = []
         allIds = rs.LockedObjects()
         for id in allIds:
