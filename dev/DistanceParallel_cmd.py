@@ -13,7 +13,6 @@ ul = UnLocker()
 __commandname__ = "DistanceParallel"
 
 def RunCommand( is_interactive ):
-
     print __commandname__
 
     # ZERO_TOLERANCE = 1.0e-5

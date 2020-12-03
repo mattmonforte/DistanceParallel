@@ -1,15 +1,12 @@
 #UnLOcker
-# import Rhino
+
 import rhinoscriptsyntax as rs
 from scriptcontext import doc
-# import scriptcontext as sc
 
 class UnLocker:
-    # Class Variables
-    # The init method or constructor
+
     def __init__(self):
-        # Instance Variables
-        # if class unlocked the layers status is true
+        # if the UnLocker class unlocked the layers unlocked status shoudl be true
         self.unlocked = False
         self.layersUnLocked = False # not used yet
         self.objectUnLocked = False # not used yet
@@ -50,7 +47,6 @@ class UnLocker:
         return
 
     def __unlockLayers(self):
-        # print("Layers unlocked")
         self.previouslyLockedLayers = []
         locked_layers = [layer for layer in doc.Layers if layer.IsLocked == True]
         for layer in locked_layers:
@@ -60,14 +56,12 @@ class UnLocker:
         return
 
     def __relockObjects(self):
-        # print("Objects relocked")
         for obj_to_lock in self.prevLockedObjects:
             rs.LockObject(obj_to_lock)
         self.objectUnLocked = False
         return
 
     def __relockLayers(self):
-        # print("Layers relocked")
         for layer in self.previouslyLockedLayers:
             layer_obj = layer[0]
             layer_persistent_locking_bool = layer[1]
