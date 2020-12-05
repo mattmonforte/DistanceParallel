@@ -1,7 +1,7 @@
 # UnLocker
 # Unlock layers and Objects in Rhinoceros 3d CAD modeling software
 #
-# r0.5
+# v0.5.1.1
 # Copyright (c)2020 Matt Monforte
 # mattmonforte@gmail.com
 # ClickWhirDing.com

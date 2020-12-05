@@ -1,6 +1,5 @@
 # DistanceParallel Command
-ctrl-shift-m
-* version 1.0.1
+* version 0.5.0.1
 * Copyright &copy;2020 Matt Monforte
 * [ClickWhirDing.com](https://ClickWhirDing.com) Contract Engineering
 * [MonSalon.org](https://monsalon.org) Web Developement
@@ -11,8 +10,6 @@ DistanceParallel is a python command for [Rhinoceros 3d CAD modeling software](h
 Have not tested on Windows
 
 Download and unzip file.
-
-
 
 DistanceParallel Measure distance between two parallel planar surfaces
 

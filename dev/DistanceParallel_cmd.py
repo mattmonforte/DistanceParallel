@@ -3,7 +3,7 @@
 # A python command for Rhinoceros 3d CAD modeling software that measures
 # the distance between two parallel planar surfaces.
 #
-# v1.0.1
+# v0.5.0.1
 # Copyright (c)2020 Matt Monforte
 # mattmonforte@gmail.com
 # ClickWhirDing.com
