@@ -1,3 +1,13 @@
-# Change Log
-
-test
+- build: Changelog: test
+- build: test build process
+- working
+- Fixed unicode issue, worked on readme, added licensing.
+- Arranged folders to closely match installation tree. Added license file.
+- Created assest directory and moved icons into icons directory
+- Added Icons and cleaned up comments in code.
+- Unlocking of layers and objects with new UnLocker Class.
+- working. commit before working on making UnLocker Class.
+- Minimal changes. commit before branching.
+- Cleaned up and organized and punctuated code. Standardized import lines.
+- Added msgOut() function and updated messages to use it.
+- Initial commit of r0,64 DistanceParallel_cmd.py. This version of the command uses GetMultiple(1,2) for selecting the layers.
