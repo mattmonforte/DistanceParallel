@@ -7,17 +7,9 @@
 DistanceParallel is a python command for [Rhinoceros 3d CAD modeling software](https://www.rhino3d.com) that measures the distance between two parallel planar surfaces.
 
 ## Installation
-Have not tested on Windows
-
-Download and unzip file.
-
-DistanceParallel Measure distance between two parallel planar surfaces
-
-## Installation
 
 1. Download and the unzip file.
-2. Move or Copy the file to the PythonPlugIns folder.
-3. Create the folder PythonPlugIns if it doesn't already exist.
+2. Move or Copy the folder (DistanceParallel {guid}) into the PythonPlugIns folder. Create the folder if it doesn't already exist.
   * Mac: ~/Library/Application Support/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/
   * Win: C:/Users/<username>/AppData/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/
 4. Restart Rhinoceros

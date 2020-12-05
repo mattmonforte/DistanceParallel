@@ -1,9 +1,9 @@
 # DistanceParallel
+# created 9/4/2020
 #
 # A python command for Rhinoceros 3d CAD modeling software that measures
 # the distance between two parallel planar surfaces.
 #
-# v0.5.0.1
 # Copyright (c)2020 Matt Monforte
 # mattmonforte@gmail.com
 # ClickWhirDing.com
