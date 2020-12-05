@@ -5,12 +5,13 @@ info:
   repository_url: https://github.com/mattmonforte/DistanceParallel
 options:
   commits:
-    # filters:
-    #   Type:
-    #     - feat
-    #     - fix
-    #     - perf
-    #     - refactor
+    filters:
+      Type:
+        - docs
+        - feat
+        - fix
+        - perf
+        - refactor
   commit_groups:
     # title_maps:
     #   feat: Features
