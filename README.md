@@ -18,7 +18,6 @@ DistanceParallel is a python command for [Rhinoceros 3d CAD modeling software](h
 ##### Optional: Add command to tool palette
 ![](/assets/icons/Distance_Parallel_Icon.png?raw=true)
 
-
 icon in assests
 Optionally create a custom icon command using the provided icon.
 !_DistanceParallel
