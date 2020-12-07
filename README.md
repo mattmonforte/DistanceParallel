@@ -4,44 +4,53 @@
 * [ClickWhirDing.com](https://ClickWhirDing.com) Contract Engineering
 * [MonSalon.org](https://monsalon.org) Web Developement
 
-DistanceParallel is a python command for [Rhinoceros 3d CAD modeling software](https://www.rhino3d.com) that measures the distance between two parallel planar surfaces.
+DistanceParallel is a python command for [Rhinoceros 3d CAD modeling software](https://www.rhino3d.com) that measures the distance between two parallel planar surfaces.-
+
 
 ## Installation
-
-1. Download and the unzip file.
-2. Move or Copy the folder (DistanceParallel {guid}) into the PythonPlugIns folder. Create the folder if it doesn't already exist.
-  * Mac: ~/Library/Application Support/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/
-  * Win: C:/Users/<username>/AppData/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/
+1. Download and unzip the folder .
+2. Move or copy the unzipped folder (DistanceParallel {guid}) into the Rhino _PythonPlugIns_ folder. Create the folder if it doesn't already exist.
+  * Mac: ~/Library/Application Support/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/DistanceParallel {guid}
+  * Win: C:/Users/<username>/AppData/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/DistanceParallel {guid}
 4. Restart Rhinoceros
 5. Run the command by typing DistanceParallel in Rhino's command line.
 
-##### Optional: Add command to tool palette
-![](/assets/icons/Distance_Parallel_Icon.png?raw=true)
+##### Optional: Add the command to a tool palette
 
+Add the DistanceParallel command to a tool palette by creating a custom button.
+![](/dev/icons/Distance_Parallel_Icon.png?raw=true)
+The icon for the command can be found in the command _dev/icons_ folder.
+Use the _Distance_Parallel_Icon.**pdf**_ file for Mac and the _Distance_Parallel_Icon.**png**_ file for Windows.
 
-icon in assests
-Optionally create a custom icon command using the provided icon.
-!_DistanceParallel
+Add _!\_DistanceParallel_ to the script/macro editor for your custom button.
+![](/assets/DistanceParallel_Button_Script.png?raw=true)
 
+For more information on creating custom tool bars/palettes:
 [Customize Tool Palettes (Mac en-us)](https://docs.mcneel.com/rhino/6mac/help/en-us/index.htm#macpreferencesandsettings/commands.htm)
-
 [Customize Tool Palettes (Windows en-us)](https://docs.mcneel.com/rhino/7/help/en-us/index.htm#toolbarsandmenus/customize_toolbars.htm)
 
 
 ## Usage
 
+Start the command by typing _DistanceParallel_ into the command line. Select two surfaces to measure the distance between. The distance will be reported in the history and optionally in a popup window. The measurement will also be added to your clipboard (untested on widows).
 
-## Support Continued Development-edit
-If you find this plugin useful please donate a little to show your support for continued development, including testing on multiple operating systems and versions on Rhino.
+Unlock layers and Objects
+
+Popup results
+
+
+
+## Support Continued Development
+If you find this plugin useful please donate to show your support for continued development.
 
 ##### Future enhancements
-* Test on Windows and Rhino 8
+* Test on Windows
+* Test in Rhino 8
 * Measure distance between planar meshes
-* Improve usability
 * Rewrite in C#
 * Create Installer and or
 * Work with Rhino Package Manager
-* Additional measurements
+* Add additional measurements
 
 <form action="https://www.paypal.com/donate" method="post" target="_top">
 <input type="hidden" name="hosted_button_id" value="ME5KQ5YZJ9VM2" />

@@ -46,8 +46,15 @@ def RunCommand( is_interactive ):
 
     if sc.sticky.has_key("distance_parallel_unlock"):
         unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
-    # if sc.sticky.has_key("distance_parallel_modalmsg"):
-        # unlockLayersDefault = sc.sticky["distance_parallel_modalmsg"]
+    else:
+        sc.sticky["distance_parallel_unlock"] = False
+        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
+
+    # if sc.sticky.has_key("distance_parallel_msg_box"):
+    #     messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
+    # else:
+    #     sc.sticky["distance_parallel_msg_box"] = False
+    #     messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
 
     go = rc.Input.Custom.GetObject()
     go.SetCommandPrompt("Select Two Parallel Planar Surfaces")
@@ -64,8 +71,12 @@ def RunCommand( is_interactive ):
     geometryType = rc.DocObjects.ObjectType.Surface
     go.GeometryFilter = geometryType
 
+    # set up the options
     unlockLayers = rc.Input.Custom.OptionToggle(unlockLayersDefault, "Off", "On")
     go.AddOptionToggle("UnlockLayersAndObjects", unlockLayers)
+
+    # messageBox = rc.Input.Custom.OptionToggle(messageBoxDefault, "Off", "On")
+    # go.AddOptionToggle("ResultsInMessageBox", messageBox)
 
     if unlockLayers.CurrentValue == 1:
         ul.unlockLayersAndObjects()
@@ -77,8 +88,6 @@ def RunCommand( is_interactive ):
         if getResult == rc.Input.GetResult.Cancel:
             clean_up_cancel()
             return rc.Commands.Result.Cancel
-        # if go.CommandResult() != rc.Commands.Result.Success:
-        #     # why is this triggering?
         #     clean_up_success()
         #     return go.CommandResult()
         if getResult == rc.Input.GetResult.Object:
@@ -119,7 +128,7 @@ def RunCommand( is_interactive ):
                 break
             # loop until second surface selected or cancel
             continue
-        # Locking and Unlocking Objects and Layers
+        # Options | Locking and Unlocking Objects and Layers
         elif getResult == rc.Input.GetResult.Option:
             if unlockLayers.CurrentValue == 1:
                 sc.sticky["distance_parallel_unlock"] = True
@@ -148,12 +157,13 @@ def RunCommand( is_interactive ):
     ParallelDistance = abs(rs.DistanceToPlane(plane[0], plane[1][0]))
     # output results
     unitsName = doc.GetUnitSystemName(True, True, True, False)
-    ## fromating output decimal places not working
+    ## fromating output decimal places not working for me
     # decimalPlaces = doc.DistanceDisplayPrecision
     # textOut = "Parallel Distance = {:." + str(decimalPlaces) +"f} " + unitsName
     rs.ClipboardText(ParallelDistance)
     textOut = "Parallel Distance = {:.4f} " + unitsName
     # msgOut(textOut.format(ParallelDistance))
+    # if sc.sticky["distance_parallel_msg_box"]:
     rs.MessageBox("the value is saved in your clipboard", 64, textOut.format(ParallelDistance))
     print(textOut.format(ParallelDistance))
     return rc.Commands.Result.Success
