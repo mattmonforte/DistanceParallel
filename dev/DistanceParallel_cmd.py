@@ -1,27 +1,28 @@
-# DistanceParallel
-# created 9/4/2020
-#
-# A python command for Rhinoceros 3d CAD modeling software that measures
-# the distance between two parallel planar surfaces.
-#
-# Copyright (c)2020 Matt Monforte
-# mattmonforte@gmail.com
-# ClickWhirDing.com
-# MonSalon.org
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see https://www.gnu.org/licenses.
+'''
+DistanceParallel
+created 9/4/2020
 
+A python command for Rhinoceros 3d CAD modeling software that measures
+the distance between two parallel planar surfaces.
+
+Copyright (c)2020 Matt Monforte
+mattmonforte@gmail.com
+ClickWhirDing.com
+MonSalon.org
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see https://www.gnu.org/licenses.
+'''
 
 import Rhino as rc
 import rhinoscriptsyntax as rs
@@ -35,7 +36,7 @@ __commandname__ = "DistanceParallel"
 def RunCommand( is_interactive ):
     print __commandname__
 
-    # ZERO_TOLERANCE = 1.0e-5
+    # ZERO_TOLERANCE = 1.0e-2
     ZERO_TOLERANCE = rs.UnitAbsoluteTolerance()
     myDebug = True
     unlockLayersDefault = False
@@ -43,18 +44,6 @@ def RunCommand( is_interactive ):
     plane = []
     selectedObjects = []
     selectedCounter = 0
-
-    if sc.sticky.has_key("distance_parallel_unlock"):
-        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
-    else:
-        sc.sticky["distance_parallel_unlock"] = False
-        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
-
-    # if sc.sticky.has_key("distance_parallel_msg_box"):
-    #     messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
-    # else:
-    #     sc.sticky["distance_parallel_msg_box"] = False
-    #     messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
 
     go = rc.Input.Custom.GetObject()
     go.SetCommandPrompt("Select Two Parallel Planar Surfaces")
@@ -71,17 +60,36 @@ def RunCommand( is_interactive ):
     geometryType = rc.DocObjects.ObjectType.Surface
     go.GeometryFilter = geometryType
 
-    # set up the options
+
+    # Set up command option persistance memory
+    if sc.sticky.has_key("distance_parallel_unlock"):
+        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
+    else:
+        sc.sticky["distance_parallel_unlock"] = False
+        unlockLayersDefault = sc.sticky["distance_parallel_unlock"]
+
+    if sc.sticky.has_key("distance_parallel_msg_box"):
+        messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
+    else:
+        sc.sticky["distance_parallel_msg_box"] = False
+        messageBoxDefault = sc.sticky["distance_parallel_msg_box"]
+
+    # set up command options
     unlockLayers = rc.Input.Custom.OptionToggle(unlockLayersDefault, "Off", "On")
     go.AddOptionToggle("UnlockLayersAndObjects", unlockLayers)
 
-    # messageBox = rc.Input.Custom.OptionToggle(messageBoxDefault, "Off", "On")
-    # go.AddOptionToggle("ResultsInMessageBox", messageBox)
+    messageBox = rc.Input.Custom.OptionToggle(messageBoxDefault, "Off", "On")
+    go.AddOptionToggle("ResultsInMessageBox", messageBox)
+
+    unlockLayersPrevState = unlockLayers.CurrentValue
+    messageBoxPrevState = messageBox.CurrentValue
 
     if unlockLayers.CurrentValue == 1:
         ul.unlockLayersAndObjects()
 
+
     while True:
+
         getResult = go.GetMultiple(selectedCounter+1,selectedCounter+1)
         # go.EnableClearObjectsOnEntry(False)
         # go.DeselectAllBeforePostSelect = False
@@ -91,6 +99,8 @@ def RunCommand( is_interactive ):
         #     clean_up_success()
         #     return go.CommandResult()
         if getResult == rc.Input.GetResult.Object:
+            # Get the view that the point was picked in.
+            view = go.View()
             selectedObjects = go.Objects()
             selectedCounter = len(selectedObjects)
             # get objects from selections
@@ -98,7 +108,7 @@ def RunCommand( is_interactive ):
             # get selected surface object
             obj = objref.Object()
             if not obj:
-                # Why is this needed?
+                # Why do?
                 if myDebug :
                     msgOut("Object not selected.")
                 clean_up_fail()
@@ -119,31 +129,42 @@ def RunCommand( is_interactive ):
 
             test, getPlane = surface.TryGetPlane(ZERO_TOLERANCE)
             if not test:
-                msgOut("Surfaces is not planar.")
+                msgOut("Surface is not planar.")
                 # maybe continue or allow select of first surface again
                 clean_up_fail()
                 return rc.Commands.Result.Failure
             plane.append(getPlane)
             if selectedCounter == 2:
+                # view.Redraw()
                 break
             # loop until second surface selected or cancel
             continue
-        # Options | Locking and Unlocking Objects and Layers
+        # Command Options
         elif getResult == rc.Input.GetResult.Option:
-            if unlockLayers.CurrentValue == 1:
-                sc.sticky["distance_parallel_unlock"] = True
-                ul.unlockLayersAndObjects()
-            else:
-                sc.sticky["distance_parallel_unlock"] = False
-                ul.relockLayersAndObjects()
-    	    # go.EnablePreSelect(False, True)
+            if unlockLayers.CurrentValue != unlockLayersPrevState:
+                if unlockLayers.CurrentValue == 1:
+                    sc.sticky["distance_parallel_unlock"] = True
+                    unlockLayersPrevState = True
+                    ul.unlockLayersAndObjects()
+                else:
+                    sc.sticky["distance_parallel_unlock"] = False
+                    unlockLayersPrevState = False
+                    ul.relockLayersAndObjects()
+            elif messageBox.CurrentValue != messageBoxPrevState:
+                if messageBox.CurrentValue == 1:
+                    sc.sticky["distance_parallel_msg_box"] = True
+                    messageBoxPrevState = True
+                else:
+                    sc.sticky["distance_parallel_msg_box"] = False
+                    messageBoxPrevState = False
+    	    go.EnablePreSelect(False, True)
             continue
-        elif getResult == Rhino.Input.GetResult.Nothing:
-            # Why is this needed?
+        elif getResult == rc.Input.GetResult.Nothing:
+            # needed?
             msgOut("Got nothing.")
             clean_up_fail()
             return rc.Commands.Result.Failure
-			# break
+	4		# break
         # end While
 
     clean_up_success()
@@ -163,9 +184,14 @@ def RunCommand( is_interactive ):
     rs.ClipboardText(ParallelDistance)
     textOut = "Parallel Distance = {:.4f} " + unitsName
     # msgOut(textOut.format(ParallelDistance))
-    # if sc.sticky["distance_parallel_msg_box"]:
-    rs.MessageBox("the value is saved in your clipboard", 64, textOut.format(ParallelDistance))
     print(textOut.format(ParallelDistance))
+    if sc.sticky["distance_parallel_msg_box"]:
+        # view.Redraw()
+        rs.MessageBox("the value is saved to your clipboard", 64, textOut.format(ParallelDistance))
+    # else:
+        #delay enough to see last selected highlighting before commend ends
+        #Doesn't always work. look for better way to do this
+        # rs.Sleep(400)
     return rc.Commands.Result.Success
 
 def msgOut(_msg):
