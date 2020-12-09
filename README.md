@@ -2,6 +2,7 @@
 ![icons_](/dev/icons/Distance_Parallel_Icon.png)
 DistanceParallel is a custom python command for [Rhinoceros 3d CAD modeler](https://www.rhino3d.com) that measures the distance between two parallel planar surfaces.
 
+* v0.5.0.4
 * Tested on Mac Rhino V6
 * Tested on Mac Rhino V7-beta
 
@@ -10,7 +11,7 @@ Start the command by typing _DistanceParallel_ into the command line. Select two
 
 ![animated gif](/assets/DistanceParallel-Usage1.gif?raw=true)
 
-#### Command Line Options
+### Command Line Options
 * ##### Unlock layers and Objects - beta
   Temporarily unlock all visible objects and unlock layers to allow surface selection. Unlocked objects and layers will be relocked on completion of the command. This feature has not been thoroughly tested. If the script crashes it will leave layers and objects unlocked. Use with caution and test to your satisfaction on non critical work.
 * ##### Results in Message Box
@@ -33,7 +34,7 @@ Meshes are not currently selectable for measurement.
 4. Restart Rhinoceros
 5. Run the command by typing DistanceParallel in Rhino's command line.
 
-##### Optional: Add the command to a tool palette
+#### Optional: Add the command to a tool palette
 Add the DistanceParallel command to a tool palette by creating a custom button.
 
 The icon for the command can be found in the command _dev/icons_ folder.
@@ -44,7 +45,9 @@ Add "_!\_DistanceParallel_" to the script/macro editor for your custom button.
 ![](/assets/DistanceParallel_Button_Script.png?raw=true)
 
 For more information on creating custom tool bars/palettes:
+
 [Customize Tool Palettes (Mac en-us)](https://docs.mcneel.com/rhino/6mac/help/en-us/index.htm#macpreferencesandsettings/commands.htm)
+
 [Customize Tool Palettes (Windows en-us)](https://docs.mcneel.com/rhino/7/help/en-us/index.htm#toolbarsandmenus/customize_toolbars.htm)
 
 ## Support Continued Development
