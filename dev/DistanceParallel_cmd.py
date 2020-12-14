@@ -164,7 +164,7 @@ def RunCommand( is_interactive ):
             msgOut("Got nothing.")
             clean_up_fail()
             return rc.Commands.Result.Failure
-	4		# break
+            # break
         # end While
 
     clean_up_success()
@@ -188,7 +188,8 @@ def RunCommand( is_interactive ):
     if sc.sticky["distance_parallel_msg_box"]:
         # view.Redraw()
         rs.MessageBox("the value is saved to your clipboard", 64, textOut.format(ParallelDistance))
-    # else:
+    else:
+        pass
         #delay enough to see last selected highlighting before commend ends
         #Doesn't always work. look for better way to do this
         # rs.Sleep(400)
