@@ -17,11 +17,11 @@ any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with this program.  If not, see https://www.gnu.org/licenses.
+along with this program. If not, see https://www.gnu.org/licenses.
 '''
 
 import Rhino as rc
@@ -34,7 +34,7 @@ ul = UnLocker()
 __commandname__ = "DistanceParallel"
 
 def RunCommand( is_interactive ):
-    print __commandname__
+    print(__commandname__ + " v0.5.1")
 
     # ZERO_TOLERANCE = 1.0e-2
     ZERO_TOLERANCE = rs.UnitAbsoluteTolerance()
@@ -59,7 +59,6 @@ def RunCommand( is_interactive ):
     # Filter object type
     geometryType = rc.DocObjects.ObjectType.Surface
     go.GeometryFilter = geometryType
-
 
     # Set up command option persistance memory
     if sc.sticky.has_key("distance_parallel_unlock"):

@@ -2,9 +2,10 @@
 ![icons_](/dev/icons/Distance_Parallel_Icon.png)
 DistanceParallel is a custom python command for [Rhinoceros 3d CAD modeler](https://www.rhino3d.com) that measures the distance between two parallel planar surfaces.
 
-* v0.5.1.0
-* Tested on Mac Rhino V6
-* Tested on Mac Rhino V7-beta
+* v0.5.1.1
+* Tested on Rhino V6 for Mac
+* Tested on Rhino V7-beta for Mac
+* Untested on Windows
 
 ## Utilization
 Start the command by typing _DistanceParallel_ into the command line. Select two parallel planar surfaces to measure the distance between them. The distance will be reported in the _command history panel_. The measurement will also be added to your clipboard (untested on Windows).

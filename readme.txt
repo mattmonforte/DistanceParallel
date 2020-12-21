@@ -1,10 +1,10 @@
 
 DistanceParallel is a python command for Rhino that provides a quick measurement of the distance between two parallel planar surfaces. The command can temporarily all unlock layers and objects to allow selection of surfaces.
 
-v0.5.0
+v0.5.1
 Installation
 1. Download and unzip the folder
-2. Move or copy the folder—DistanceParallel{c92ade5c-25c3-4adf-be7c-f64c5609bff2}—into the Rhino PythonPlugIns folder. Create the folder if it doesn't already exist.
+2. Move or copy the folder—DistanceParallel{c92ade5c-25c3-4adf-be7c-f64c5609bff2}—into the Rhino "PythonPlugIns" folder. Create the "PythonPlugIns" folder if it doesn't already exist.
 
 Mac: ~/Library/Application Support/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/DistanceParallel{c92ade5c-25c3-4adf-be7c-f64c5609bff2}
 Win: C:/Users/<username>/AppData/McNeel/Rhinoceros/6.0/Plug-ins/PythonPlugIns/DistanceParallel{c92ade5c-25c3-4adf-be7c-f64c5609bff2}
